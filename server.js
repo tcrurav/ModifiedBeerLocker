@@ -12,7 +12,8 @@ var passport = require('passport');
 var authController = require('./controllers/auth');
 
 mongoose.connect('mongodb://localhost:27017/beerlocker', { 
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useCreateIndex: true
 }).then(() => {
     console.log('Connected to MongoDB mongodb://localhost:27017/beerlocker');
 }, err => {
@@ -34,7 +35,7 @@ router.get('/', (req, res) => {
 });
 
 router.route('/beers')
-    .post(authController.isAuthenticated, beerController.postBeer)
+    .post(authController.isAuthenticated, beerController.postBeers)
     .get(authController.isAuthenticated, beerController.getBeers);
 
 router.route('/beer/:beer_id')

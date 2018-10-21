@@ -1,8 +1,6 @@
 var User = require('../models/user');
 
 const postUsers = (req, res) => {
-    console.log(req.body.username);
-    console.log(req.body.password);
 
     var user = new User({
         username: req.body.username,

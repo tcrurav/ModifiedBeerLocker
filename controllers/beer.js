@@ -1,11 +1,12 @@
 var Beer = require('../models/beer');
 
-const postBeer = (req, res) => {
+const postBeers = (req, res) => {
     var beer = new Beer();
 
     beer.name = req.body.name;
     beer.type = req.body.type;
     beer.quantity = req.body.quantity;
+    beer.userId = req.user._id;
 
     beer.save((err) => {
         if(err) res.send(err);
@@ -15,7 +16,7 @@ const postBeer = (req, res) => {
 };
 
 const getBeers = (req, res) => {
-    Beer.find((err, beers) => {
+    Beer.find({userId: req.user._id}, (err, beers) => {
         if(err) res.send(err);
 
         res.json(beers);
@@ -23,7 +24,7 @@ const getBeers = (req, res) => {
 };
 
 const getBeerById = (req, res) => {
-    Beer.findById(req.params.beer_id, (err, beer) => {
+    Beer.findById({ userId: req.user._id, _id: req.params.beer_id}, (err, beer) => {
         if(err) res.send(err);
 
         res.json(beer);
@@ -31,7 +32,7 @@ const getBeerById = (req, res) => {
 };
 
 const putBeer = (req, res) => {
-    Beer.findById(req.params.beer_id, (err, beer) => {
+    Beer.findById({ userId: req.user._id, _id: req.params.beer_id }, (err, beer) => {
         if(err) res.send(err);
 
         beer.quantity = req.body.quantity;
@@ -45,7 +46,7 @@ const putBeer = (req, res) => {
 };
 
 const deleteBeer = (req, res) => {
-    Beer.findByIdAndRemove(req.params.beer_id, (err) => {
+    Beer.findByIdAndRemove({ userId: req.user._id, _id: req.params.beer_id }, (err) => {
         if(err) res.send(err);
 
         res.json({ message: 'Beer removed from locker'});
@@ -55,7 +56,7 @@ const deleteBeer = (req, res) => {
 module.exports = {
     getBeers,
     getBeerById,
-    postBeer,
+    postBeers,
     putBeer,
     deleteBeer
 }
