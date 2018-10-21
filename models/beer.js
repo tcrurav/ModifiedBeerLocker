@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+mongoose.set('useFindAndModify', false);
 
 var BeerSchema = new mongoose.Schema({
     name: String,
