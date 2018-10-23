@@ -1,15 +1,17 @@
 var express = require('express');
 
 var mongoose = require('mongoose');
-mongoose.set('useFindAndModify', false);
 
 var bodyParser = require('body-parser');
 
 var beerController = require('./controllers/beer');
 var userController = require('./controllers/user');
+var clientController = require('./controllers/client');
 
 var passport = require('passport');
 var authController = require('./controllers/auth');
+
+var ejs = require('ejs');
 
 mongoose.connect('mongodb://localhost:27017/beerlocker', { 
     useNewUrlParser: true,
@@ -27,6 +29,8 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(passport.initialize());
+
+app.set('view-engine', 'ejs');
 
 var router = express.Router();
 
@@ -46,6 +50,10 @@ router.route('/beer/:beer_id')
 router.route('/users')
     .post(userController.postUsers)
     .get(authController.isAuthenticated, userController.getUsers);
+
+router.route('/clients')
+    .post(authController.isAuthenticated, clientController.postClients)
+    .get(authController.isAuthenticated, clientController.getClients);
 
 app.use('/api', router);
 
